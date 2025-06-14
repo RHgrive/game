@@ -8,6 +8,9 @@ const config = {
         width: 768,
         height: 1024
     },
+    dom: {
+        createContainer: true
+    },
     scene: [BootScene, PreloadScene, MenuScene, GameScene, UIScene]
 };
 
