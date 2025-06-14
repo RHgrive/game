@@ -129,11 +129,12 @@ class GameScene extends Phaser.Scene {
 
     rotatePiece() {
         const prevRotation = this.currentPiece.rotation;
+        const prevShape = this.currentPiece.shape;
         this.currentPiece.rotation = (prevRotation + 1) % 4;
-        this.currentPiece.shape = Phaser.Utils.Array.Rotate(this.currentPiece.shape);
+        this.currentPiece.shape = Phaser.Utils.Array.Matrix.RotateLeft(prevShape);
         if (this.checkCollision()) {
             this.currentPiece.rotation = prevRotation;
-            this.currentPiece.shape = Phaser.Utils.Array.Rotate(this.currentPiece.shape, -1);
+            this.currentPiece.shape = Phaser.Utils.Array.Matrix.RotateRight(prevShape);
         } else {
             this.sound.play('move');
         }
