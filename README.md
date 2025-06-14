@@ -6,3 +6,4 @@ BootScene、PreloadScene、MenuScene、GameScene、UIScene の 5 つのシーン
 要素をすべて備えています。
 
 `index.html` をブラウザで開くだけで遊ぶことができます。
+Phaser 3 のライブラリを `js/phaser.min.js` として同梱しているため、インターネット接続なしでも動作します。
