@@ -1,3 +1,13 @@
+const PIECE_COLORS = {
+    I: 0x00ffff,
+    J: 0x0000ff,
+    L: 0xff7f00,
+    O: 0xffff00,
+    S: 0x00ff00,
+    T: 0x800080,
+    Z: 0xff0000
+};
+
 class GameScene extends Phaser.Scene {
     constructor() {
         super({ key: 'GameScene' });
@@ -11,9 +21,13 @@ class GameScene extends Phaser.Scene {
         this.linesCleared = 0;
         this.dropInterval = 1000;
         this.lastDropTime = 0;
+        this.gridGraphics = null;
+        this.pieceGraphics = null;
     }
 
     create() {
+        this.gridGraphics = this.add.graphics();
+        this.pieceGraphics = this.add.graphics();
         this.initGrid();
         this.generatePieces();
         this.input.keyboard.on('keydown', this.handleKey, this);
@@ -174,11 +188,11 @@ class GameScene extends Phaser.Scene {
     }
 
     lockPiece() {
-        const { shape, x, y } = this.currentPiece;
+        const { shape, x, y, type } = this.currentPiece;
         for (let row = 0; row < shape.length; row++) {
             for (let col = 0; col < shape[row].length; col++) {
                 if (shape[row][col] && y + row >= 0) {
-                    this.grid[y + row][x + col] = 1;
+                    this.grid[y + row][x + col] = type;
                 }
             }
         }
@@ -215,27 +229,28 @@ class GameScene extends Phaser.Scene {
     }
 
     drawGrid() {
-        const graphics = this.add.graphics();
-        graphics.clear();
+        this.gridGraphics.clear();
         for (let row = 0; row < 20; row++) {
             for (let col = 0; col < 10; col++) {
                 if (this.grid[row][col]) {
-                    graphics.fillRect(col * 32, row * 32, 32, 32);
+                    const color = PIECE_COLORS[this.grid[row][col]] || 0xffffff;
+                    this.gridGraphics.fillStyle(color, 1);
+                    this.gridGraphics.fillRect(col * 32, row * 32, 32, 32);
                 }
-                graphics.lineStyle(1, 0x222222);
-                graphics.strokeRect(col * 32, row * 32, 32, 32);
+                this.gridGraphics.lineStyle(1, 0x222222);
+                this.gridGraphics.strokeRect(col * 32, row * 32, 32, 32);
             }
         }
     }
 
     drawPiece(piece) {
-        const graphics = this.add.graphics();
-        graphics.clear();
-        const { shape, x, y } = piece;
+        this.pieceGraphics.clear();
+        const { shape, x, y, type } = piece;
+        this.pieceGraphics.fillStyle(PIECE_COLORS[type], 1);
         for (let row = 0; row < shape.length; row++) {
             for (let col = 0; col < shape[row].length; col++) {
                 if (shape[row][col]) {
-                    graphics.fillRect((x + col) * 32, (y + row) * 32, 32, 32);
+                    this.pieceGraphics.fillRect((x + col) * 32, (y + row) * 32, 32, 32);
                 }
             }
         }
